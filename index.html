@@ -7,6 +7,13 @@
     <canvas style="width: 400px; height:250px;
             background: #457894"
             id="myCanvas"></canvas>
-    <script type="text/javascript" src="./index.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "#/": "./modules/"
+        }
+      }
+    </script>
+    <script type="module" src="./index.js"></script>
   </body>
 </html>
