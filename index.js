@@ -1,12 +1,42 @@
-console.log('Raghav (Not a student)')
+import {CanvasImage} from '#/CanvasImage.js'
+import {Pixel} from '#/Pixel.js'
 
-const canvasEl = document.querySelector('#myCanvas')
-const {height:H, width: W} = canvasEl
-console.log({H,W})
+function docReady (fn) {
+  if (document.readyState === 'complete' ||
+      document.readyState === 'interactive') {
+    setTimeout(fn, 1)
+  } else {
+    document.addEventListener('DOMContentLoaded', fn)
+  }
+}
 
-const ctx = canvasEl.getContext('2d')
+function main () {
+  
+  console.log('Raghav (Not a student)')
 
-const imData = ctx.getImageData(0, 0, W, H)
-console.log(
-  Object.keys(imData)
-)
+  const canvasEl = document.querySelector('#myCanvas')
+  const {height:H, width: W} = canvasEl
+  console.log({H,W})
+
+  const ctx = canvasEl.getContext('2d')
+
+  const imData = ctx.getImageData(0, 0, W, H)
+  console.log(Object.keys(imData))
+
+  const canvas = new CanvasImage('#myCanvas')
+  console.log(canvas)
+
+  // const pixel = new Pixel(102,45,255,255,255,255)
+  // console.log(pixel)
+
+  // canvas.setPixel(pixel)
+
+  // pixel.x = 103
+  // pixel.y = 46
+  // canvas.setPixel(pixel)
+
+  // canvas.flush()
+
+}
+
+docReady(main)
