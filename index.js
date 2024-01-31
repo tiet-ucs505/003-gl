@@ -19,7 +19,7 @@ function setPixel(px, py, imData, W, H) {
   // Manipulate the imData
   // ----------------------------------------------------
 
-  let offset, r,g,b,a
+  let offset, r,g,b,a, pixels
 
   // Retrieve Image Data as pixels
   pixels = imData.data
