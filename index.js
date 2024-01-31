@@ -1,51 +1,42 @@
-import {CanvasImage} from '#/CanvasImage.js'
-import {Pixel} from '#/Pixel.js'
-import {testA} from '#/A.js'
-import {testFunctional} from '#/functional.js'
+// ----------------------------------------------------
+// Bootstrap
+// ----------------------------------------------------
+const canvas = document.querySelector('#myCanvas')
+const ctx = canvas.getContext('2d')
+const [x0,y0,W,H] = [0, 0, canvas.width, canvas.height]
+const imData = ctx.getImageData(x0,y0,W,H)
+console.log({x0, y0, W, H})
 
-function docReady (fn) {
-  if (document.readyState === 'complete' ||
-      document.readyState === 'interactive') {
-    setTimeout(fn, 1)
-  } else {
-    document.addEventListener('DOMContentLoaded', fn)
-  }
-}
+// ----------------------------------------------------
+// Manipulate the imData
+// ----------------------------------------------------
 
-function main () {
-  
-  console.log('Raghav (Not a student)')
+let pixels, px, py, offset, r,g,b,a
 
-  const canvasEl = document.querySelector('#myCanvas')
-  const {height:H, width: W} = canvasEl
-  // const obj = {
-  //   H: H,
-  //   W: W
-  // }
-  // console.log(obj)
-  console.log({H,W})
+// Retrieve Image Data as pixels
+pixels = imData.data
 
-  const ctx = canvasEl.getContext('2d')
+// Pixel index
+px = 87
+py = 27
+console.log({px, py})
 
-  const imData = ctx.getImageData(0, 0, W, H)
-  console.log({imDataKeys: Object.keys(imData)})
+// Compute offset
+offset = (py * W + px) * 4
 
-  const canvas = new CanvasImage('#myCanvas')
-  console.log(canvas)
+// Set color
+r = g = b = a = 255
+console.log({r,g,b,a})
 
-  const pixel = new Pixel(102,45,255,255,255,255)
-  console.log(pixel)
+// Set pixel value
+pixels.set([r,g,b,a], offset)
 
-  canvas.setPixel(pixel)
+// ----------------------------------------------------
+// Data Manipulation ends
+// ----------------------------------------------------
 
-  pixel.x = 103
-  pixel.y = 46
-  canvas.setPixel(pixel)
 
-  canvas.flush()
-
-  // testA()
-  // testFunctional()
-}
-
-docReady(main)
+// ----------------------------------------------------
+// Flush
+// ----------------------------------------------------
+ctx.putImageData(imData, x0, y0)
