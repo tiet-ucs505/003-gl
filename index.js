@@ -13,23 +13,40 @@ function getContextAndPixels(canvas) {
 
 }
 
-function setPixel(px, py, imData, W, H) {
+function setPixel(
+  px, py,
+  imData, W, H
+) {
+  let r,g,b,a
+  
+  // Set color
+  r = g = b = a = 255
+  console.log({r,g,b,a})
+
+  return setPixelColor(
+    px, py,
+    r, g, b, a,
+    imData, W, H
+  )
+}
+
+function setPixelColor(
+  px, py,
+  r, g, b, a,
+  imData, W, H
+) {
 
   // ----------------------------------------------------
   // Manipulate the imData
   // ----------------------------------------------------
 
-  let offset, r,g,b,a, pixels
+  let offset, pixels
 
   // Retrieve Image Data as pixels
   pixels = imData.data
 
   // Compute offset
   offset = (py * W + px) * 4
-
-  // Set color
-  r = g = b = a = 255
-  console.log({r,g,b,a})
 
   // Set pixel value
   pixels.set([r,g,b,a], offset)
