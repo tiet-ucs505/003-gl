@@ -33,19 +33,19 @@ function main () {
   const canvas = new CanvasImage('#myCanvas')
   console.log(canvas)
 
-  // const pixel = new Pixel(102,45,255,255,255,255)
-  // console.log(pixel)
+  const pixel = new Pixel(102,45,255,255,255,255)
+  console.log(pixel)
 
-  // canvas.setPixel(pixel)
+  canvas.setPixel(pixel)
 
-  // pixel.x = 103
-  // pixel.y = 46
-  // canvas.setPixel(pixel)
+  pixel.x = 103
+  pixel.y = 46
+  canvas.setPixel(pixel)
 
-  // canvas.flush()
+  canvas.flush()
 
-  testA()
-  testFunctional()
+  // testA()
+  // testFunctional()
 }
 
 docReady(main)

@@ -1,6 +1,9 @@
 export function testFunctional() {
   
+  // let a = []
   const a = [1,2,4,3,9,7,5,8]
+
+  a[3] = 25
 
   console.log({
     double: a.map(double),
@@ -49,3 +52,14 @@ function square(x) {
 }
 
 export default {testFunctional}
+
+const sumOfSquares = function(seq) {
+  return seq.map(square).reduce(sum, 0)
+}
+
+const sumOfSquaresByArrow = (seq) => {
+  return seq.map(square).reduce(sum, 0)
+}
+
+const sumOfSquaresByArrowClosure =
+      (seq) => (seq.map(square).reduce(sum, 0))
