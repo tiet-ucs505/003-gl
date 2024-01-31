@@ -1,5 +1,4 @@
-function setPixel(px, py, canvas) {
-
+function getContextAndPixels(canvas) {
   // ----------------------------------------------------
   // Bootstrap
   // ----------------------------------------------------
@@ -10,12 +9,17 @@ function setPixel(px, py, canvas) {
 
   const imData = ctx.getImageData(x0,y0,W,H)
 
+  return {ctx, imData, x0, y0, W, H}
+
+}
+
+function setPixel(px, py, imData, W, H) {
+
   // ----------------------------------------------------
   // Manipulate the imData
   // ----------------------------------------------------
 
-  let pixels, // px, py, 
-      offset, r,g,b,a
+  let offset, r,g,b,a
 
   // Retrieve Image Data as pixels
   pixels = imData.data
@@ -33,28 +37,36 @@ function setPixel(px, py, canvas) {
   // ----------------------------------------------------
   // Data Manipulation ends
   // ----------------------------------------------------
+}
 
+function flush({ctx, imData, x0, y0}) {
 
   // ----------------------------------------------------
   // Flush
   // ----------------------------------------------------
   ctx.putImageData(imData, x0, y0)
+
 }
 
 const canvas = document.querySelector('#myCanvas')
 console.log(canvas.getBoundingClientRect())
 let px, py
 
+const {ctx, imData, x0, y0, W, H}
+      = getContextAndPixels(canvas)
+
 // Pixel index
 px = 87
 py = 27
 console.log({px, py})
 
-setPixel(px, py, canvas)
+setPixel(px, py, imData, W, H)
+flush({ctx, imData, x0, y0})
 
 canvas.addEventListener('click', function(e) {
   const {x:tx, y:ty} = e.target.getBoundingClientRect()
   const px = e.clientX - tx, py = e.clientY-ty
   console.log([px, py])
-  setPixel(px, py, e.target)
+  setPixel(px, py, imData, W, H)
+  flush({ctx, imData, x0, y0})
 })
