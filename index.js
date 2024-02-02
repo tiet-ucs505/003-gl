@@ -12,7 +12,7 @@ console.log(canvas.getBoundingClientRect())
 const gl = canvas.getContext("webgl2")
 
 // Set background white
-r=g=b=a=1.0
+r=g=b=a=0.85
 gl.clearColor(r,g,b,a)
 
 // Clear Buffers
@@ -27,7 +27,7 @@ gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
 // Compile Vertex Shader
 // ----------------------------------------------------
-const vShaderTxt = `
+const vShaderTxt = `#version 300 es
 in vec3 a_position;
 
 uniform float uPointSize;
@@ -53,7 +53,7 @@ if (!gl.getShaderParameter(vShader, gl.COMPILE_STATUS)) {
 
 // Compile Fragment Shader
 // ----------------------------------------------------
-const fShaderTxt = `
+const fShaderTxt = `#version 300 es
 precision mediump float;
 
 out vec4 finalColor;
@@ -63,7 +63,7 @@ void main(void) {
 }
 `
 
-const fShader = gl.createShader(gl.VERTEX_SHADER)
+const fShader = gl.createShader(gl.FRAGMENT_SHADER)
 gl.shaderSource(fShader, fShaderTxt)
 gl.compileShader(fShader)
 
