@@ -1,5 +1,11 @@
 let r,g,b,a
 
+const pts = [
+  // x	, y	, z,
+  0	, 0	, 0,
+  0.5	, 0.5	, 0,
+]
+
 // ----------------------------------------------------
 // Bootstrap
 // ----------------------------------------------------
@@ -10,9 +16,13 @@ console.log(canvas.getBoundingClientRect())
 
 // Get Context
 const gl = canvas.getContext("webgl2")
+// Validate GL Context
+if (!gl) {
+  console.error("WebGL context is not available.")
+}
 
 // Set background white
-r=g=b=a=1.0
+r=g=b=a=0.85
 gl.clearColor(r,g,b,a)
 
 // Clear Buffers
@@ -27,7 +37,7 @@ gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
 // Compile Vertex Shader
 // ----------------------------------------------------
-const vShaderTxt = `
+const vShaderTxt = `# version 300 es
 in vec3 a_position;
 
 uniform float uPointSize;
@@ -49,11 +59,13 @@ if (!gl.getShaderParameter(vShader, gl.COMPILE_STATUS)) {
       glInfoLog: gl.getShaderInfoLog(vShader)
     }
   })
+
+  gl.deleteShader(vShader)
 }
 
 // Compile Fragment Shader
 // ----------------------------------------------------
-const fShaderTxt = `
+const fShaderTxt = `# version 300 es
 precision mediump float;
 
 out vec4 finalColor;
@@ -63,7 +75,7 @@ void main(void) {
 }
 `
 
-const fShader = gl.createShader(gl.VERTEX_SHADER)
+const fShader = gl.createShader(gl.FRAGMENT_SHADER)
 gl.shaderSource(fShader, fShaderTxt)
 gl.compileShader(fShader)
 
@@ -74,6 +86,8 @@ if (!gl.getShaderParameter(fShader, gl.COMPILE_STATUS)) {
       glInfoLog: gl.getShaderInfoLog(fShader)
     }
   })
+
+  gl.deleteShader(fShader)
 }
 
 // Link all the Shaders together
@@ -89,7 +103,7 @@ gl.attachShader(shaderProgram,fShader)
 gl.linkProgram(shaderProgram)
 
 //Check if successful
-if(!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)){
+if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)){
   console.error({
     shaderLinkingError: {
       glInfoLog: gl.getProgramInfoLog(shaderProgram)
@@ -99,7 +113,7 @@ if(!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)){
 }
 
 //Only do this for additional debugging.
-if(doValidate) {
+if (doValidate) {
   gl.validateProgram(shaderProgram)
   if(!gl.getProgramParameter(shaderProgram,gl.VALIDATE_STATUS)){
     console.error({
@@ -116,10 +130,10 @@ if(doValidate) {
 // ----------------------------------------------------
 // TODO, detaching might cause issues on some browsers,
 // Might only need to delete.
-// gl.detachShader(shaderProgram,vShader);
-// gl.detachShader(shaderProgram,fShader);
-// gl.deleteShader(fShader);
-// gl.deleteShader(vShader);
+gl.detachShader(shaderProgram,vShader);
+gl.detachShader(shaderProgram,fShader);
+gl.deleteShader(fShader);
+gl.deleteShader(vShader);
 
 // ----------------------------------------------------
 
@@ -144,7 +158,7 @@ gl.useProgram(null);
 // ----------------------------------------------------
 // Set Up Data Buffers
 // ----------------------------------------------------
-const aryVerts = new Float32Array([0,0,0, 0.5,0.5,0 ]),
+const aryVerts = new Float32Array(pts),
       bufVerts = gl.createBuffer();
 
 gl.bindBuffer(gl.ARRAY_BUFFER,bufVerts);
