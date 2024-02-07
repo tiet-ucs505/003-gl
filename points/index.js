@@ -12,6 +12,9 @@ const pts = [
   // x	, y	, z,
   0	, 0	, 0,
   0.5	, 0.5	, 0,
+  -0.5	, 0.5	, 0,
+  -0.5	, -0.5	, 0,
+  -0.75	, -0.5	, 0,
 ]
 const pointSize = 50.0
 const bgColor = {r:0.95,g:0.95,b:0.95,a:1}
@@ -22,6 +25,7 @@ const vShaderTxt = `# version 300 es
 in vec3 a_position;
 
 uniform float uPointSize;
+uniform vec3 uFgColorRgb;
 
 void main(void){
   gl_PointSize = uPointSize;
@@ -34,10 +38,13 @@ void main(void){
 const fShaderTxt = `# version 300 es
 precision mediump float;
 
+uniform vec3 uFgColorRgb;
+
 out vec4 finalColor;
 
 void main(void) {
-  finalColor = vec4(0.0, 0.0, 0.0, 1.0);
+  // vec3 fgColor = vec3(0.0, 0.0, 0.0);
+  finalColor = vec4(uFgColorRgb, 1.0);
 }
 `
 
@@ -113,6 +120,10 @@ function main(
     shaderProgram,
     "uPointSize"
   )
+  , uFgColorRgbLoc	= gl.getUniformLocation(
+    shaderProgram,
+    "uFgColorRgb"
+  )
   gl.useProgram(null);
 
   // ----------------------------------------------------
@@ -127,6 +138,9 @@ function main(
   // Store data to the shader's uniform variable
   // uPointSize
   gl.uniform1f(uPointSizeLoc, pointSize);
+
+  const fgColorRgb = [0.4, 0.5, 0.9]
+  gl.uniform3fv(uFgColorRgbLoc, new Float32Array(fgColorRgb));
 
 
   // Attributes
@@ -146,7 +160,13 @@ function main(
   // ----------------------------------------------------
   // Draw the points
   // ----------------------------------------------------
-  gl.drawArrays(gl.POINTS, 0, 2);
+  // gl.drawArrays(gl.POINTS, 0, 3);
+  // gl.drawArrays(gl.LINES, 0, 2);
+  // gl.drawArrays(gl.LINE_STRIP, 0, 3);
+  // gl.drawArrays(gl.LINE_LOOP, 0, 3);
+  // gl.drawArrays(gl.TRIANGLES, 0, 3);
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 5);
+  // gl.drawArrays(gl.TRIANGLE_FAN, 0, 5);
 
 }
 
