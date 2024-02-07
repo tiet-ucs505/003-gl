@@ -254,8 +254,8 @@ function createBufferFromData(gl, bufType, data, drawMode) {
   const buffer = gl.createBuffer();
 
   gl.bindBuffer(bufType, buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, data, drawMode);
-  gl.bindBuffer(gl.ARRAY_BUFFER,null);
+  gl.bufferData(bufType, data, drawMode);
+  gl.bindBuffer(bufType, null);
 
   return buffer
 }
