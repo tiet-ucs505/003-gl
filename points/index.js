@@ -1,8 +1,13 @@
+// ----------------------------------------------------
+// This program
+// + takes as input: pts, pointSize, bgColor;
+// + 
+// ----------------------------------------------------
+
+// Variables
 let r,g,b,a
 
-// ----------------------------------------------------
-// Draw points defined in pts with a given pointSize
-// ----------------------------------------------------
+// Inputs to the program
 const pts = [
   // x	, y	, z,
   0	, 0	, 0,
@@ -10,13 +15,6 @@ const pts = [
 ]
 const pointSize = 50.0
 const bgColor = {r:0.95,g:0.95,b:0.95,a:1}
-// ----------------------------------------------------
-
-// ----------------------------------------------------
-// Other minor details
-// ----------------------------------------------------
-// Canvas Selector
-const canvasSel = '#myCanvas'
 
 // Vertex Shader Text
 // ----------------------------------------------------
@@ -30,8 +28,6 @@ void main(void){
   gl_Position = vec4(a_position, 1.0);
 }
 `
-// For clarity
-document.querySelector('#vShader code').textContent = vShaderTxt
 
 // Fragment Shader Text
 // ----------------------------------------------------
@@ -44,23 +40,30 @@ void main(void) {
   finalColor = vec4(0.0, 0.0, 0.0, 1.0);
 }
 `
-// For clarity
-document.querySelector('#fShader code').textContent = fShaderTxt
 
+// Other minor details
+// ----------------------------------------------------
+// Canvas Selector
+const canvasSel = '#myCanvas'
 // For Debugging
 // Switch this off in production
 const isLinkingValidated = true
+
+// Execute the main
+// ----------------------------------------------------
+main(canvasSel,
+     bgColor,
+     pts,
+     pointSize,
+     vShaderTxt,
+     fShaderTxt,
+     isLinkingValidated
+    )
 // ----------------------------------------------------
 
-main(  canvasSel,
-       bgColor,
-       pts,
-       pointSize,
-       vShaderTxt,
-       fShaderTxt,
-       isLinkingValidated
-    )
-
+// ----------------------------------------------------
+// Main
+// ----------------------------------------------------
 function main(
   canvasSel,
   bgColor,
@@ -89,6 +92,9 @@ function main(
   // ----------------------------------------------------
   // Create Program
   // ----------------------------------------------------
+  // For clarity
+  writeTextToDomSelector(vShaderTxt, '#vShader code')
+  writeTextToDomSelector(fShaderTxt, '#fShader code')
   const vShader = compileShader(gl, vShaderTxt, gl.VERTEX_SHADER)
   const fShader = compileShader(gl, fShaderTxt, gl.FRAGMENT_SHADER)
   const shaderProgram = linkShaders(
@@ -144,7 +150,9 @@ function main(
 
 }
 
-
+// ----------------------------------------------------
+// Bootstrap
+// ----------------------------------------------------
 function getGlAndResetCanvas(sel, bgColor={a:0})
 {
   // --------------------------------------------------
@@ -258,4 +266,12 @@ function createBufferFromData(gl, bufType, data, drawMode) {
   gl.bindBuffer(bufType, null);
 
   return buffer
+}
+
+// ----------------------------------------------------
+// Utils
+// ----------------------------------------------------
+function writeTextToDomSelector(txt, sel) {
+  const domEl = document.querySelector(sel)
+  domEl.textContent = txt
 }
