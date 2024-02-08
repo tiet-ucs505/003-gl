@@ -52,13 +52,13 @@ function stepperOne(ts) {
     } else {
       S.runningFillDurationAverage = S.fillDuration
     }
-    S.fps = Math.floor(1000 * S.N / S.fillDuration)
+    S.fps = 1000 * S.N / S.fillDuration
 
     if (0 < S.fillDuration) {
       S.message = {
 	fillDuration: S.fillDuration,
 	runningFillDurationAverage: S.runningFillDurationAverage,
-	fps: S.fps,
+	fps: Math.floor(S.fps),
       }
 
       setDomText('#valueFromStepperOne',
