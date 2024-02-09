@@ -110,6 +110,44 @@ class Fps {
   }
 }
 
+class Clock {
+  gl
+  time
+  // Colors RGBA
+  bgColor = [1,1,1,1]		
+  dialFillColor = [1,1,0.9,1]
+  dialStrokeColor = [0.8,0.8,0.2,1]
+  dialStrokeWidth = 1
+  
+  #startMs
+  constructor(canvasSel, startMs, H, M, S) {
+    this.initCanvas(canvasSel)
+    this.time = {H,M,S}
+    this.#startMs = startMs
+    this.createBuffers()
+    this.createProgram()
+  }
+  draw(ms) {
+    this.resetCanvas()
+    this.drawSingleWidth()
+    this.drawDoubleWidth()
+    this.drawQuadWidth()
+  }
+  initCanvas(canvasSel) {
+    const canvas = document.querySelector(canvasSel)
+    const {x0, y0, width: W, height: H} = canvas.getBoundingClientRect()
+    canvas.width = W
+    canvas.height = H
+    // Get Context
+    this.gl = canvas.getContext("webgl2")
+    // Validate GL Context
+    if (!this.gl) {
+      console.error("WebGL context is not available.")
+    }
+  }
+  
+}
+
 main()
 
 
