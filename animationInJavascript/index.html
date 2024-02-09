@@ -5,10 +5,22 @@
   </head>
   <body>
     <h1>Updating values with time</h1>
+
     <h2>Simple <code>requestAnimationFrame</code></h2>
-    <p>The value returned by <code>stepperOne</code>
+    <p>The value updated by <code>stepperOne</code>
       is:</p>
     <pre><code id="valueFromStepperOne"></code></pre>
+
+
+    <h2>Normalising speed in a <code>rAF</code>
+      callback</h2>
+    <p>The returned numberline will be of the same
+      scale, irrespective of refresh
+      rate <code>requestAnimationFrame</code></p>
+
+    <p>The value updated by <code>stepperTwo</code>
+      is:</p>
+    <pre><code id="valueFromStepperTwo"></code></pre>
 
     <script type="text/javascript" src="./index.js"></script>
   </body>

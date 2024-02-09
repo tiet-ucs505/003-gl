@@ -9,10 +9,18 @@ const stepperOneState = {
   fps: 0.0,
 }
 
+const stepperTwoState = {
+  message: "empty",
+  start: document.timeline.currentTime,
+  angularSpeedRpm: 30,
+}
+
 main()
 
 function main() {
   const stepperOneRaf = window.requestAnimationFrame(stepperOne)
+
+  const stepperTwoRaf = window.requestAnimationFrame(stepperTwo)
 }
 
 function stepperOne(ts) {
@@ -80,3 +88,20 @@ function setDomText(sel, txt) {
   const domEl = document.querySelector(sel)
   domEl.textContent = txt
 }
+
+function stepperTwo(ts) {
+  const S = stepperTwoState
+
+  if (!S.tp)
+    S.tp = 60000/S.angularSpeedRpm
+
+  S.message = {
+    rotation: ((ts - S.start) / S.tp) % 1
+  }  
+
+  setDomText('#valueFromStepperTwo',
+	     JSON.stringify(S.message, null, 2))
+
+  window.requestAnimationFrame(stepperTwo)
+}
+
