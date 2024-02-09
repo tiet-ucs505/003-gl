@@ -18,6 +18,14 @@ const pts = [
 ]
 const pointSize = 50.0
 const bgColor = {r:0.95,g:0.95,b:0.95,a:1}
+const fgColor = {r:0.95,g:0.45,b:0.15,a:1}
+// ----------------------------------------------------
+
+// ----------------------------------------------------
+// Other minor details
+// ----------------------------------------------------
+// Canvas Selector
+const canvasSel = '#myCanvas'
 
 // Vertex Shader Text
 // ----------------------------------------------------
@@ -139,8 +147,12 @@ function main(
   // uPointSize
   gl.uniform1f(uPointSizeLoc, pointSize);
 
-  const fgColorRgb = [0.4, 0.5, 0.9]
-  gl.uniform3fv(uFgColorRgbLoc, new Float32Array(fgColorRgb));
+  r = fgColor.r
+  g = fgColor.g
+  b = fgColor.b
+  a = fgColor.a
+  console.log({fgColor: [r,g,b,a]})
+  gl.uniform3fv(uFgColorRgbLoc, new Float32Array([r,g,b]));
 
 
   // Attributes
@@ -161,6 +173,7 @@ function main(
   // Draw the points
   // ----------------------------------------------------
   // gl.drawArrays(gl.POINTS, 0, 3);
+<<<<<<< HEAD
   // gl.drawArrays(gl.LINES, 0, 2);
   // gl.drawArrays(gl.LINE_STRIP, 0, 3);
   // gl.drawArrays(gl.LINE_LOOP, 0, 3);
@@ -168,6 +181,9 @@ function main(
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 5);
   // gl.drawArrays(gl.TRIANGLE_FAN, 0, 5);
 
+=======
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+>>>>>>> b0d81aa (Add highlightjs.)
 }
 
 // ----------------------------------------------------
