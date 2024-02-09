@@ -15,12 +15,118 @@ const stepperTwoState = {
   angularSpeedRpm: 30,
 }
 
+class StepperThree {
+  #startMs = null
+  rotr = null
+  domEl = null
+  fps = null
+
+  constructor(sel, angularSpeedRpm, phase=0.0) {
+    this.domEl = document.querySelector(sel)
+    this.rotr = new Rotr(angularSpeedRpm, phase)
+    this.fps = new Fps(100, 0.05)
+  }
+
+  start() {
+    this.#startMs = document.timeline.currentTime
+  }
+
+  step(ms) {
+    this.domEl.textContent = this.message(
+      this.rotr.radians(ms - this.#startMs),
+      this.fps.getFps(ms - this.#startMs),
+    )
+  }
+
+  get isActive() {
+    return this.#startMs !== null
+  }
+
+  message(radians, fps) {
+    return JSON.stringify({radians, fps}, null, 2)
+  }
+}
+
+class Rotr {
+  rpm
+  phase
+  #timePeriod
+
+  constructor(rpm, phase = 0.0) {
+    this.rpm = rpm
+    this.phase = phase
+    this.#timePeriod = (60000 / this.rpm)
+  }
+
+  rotations(ms) {
+    const T = this.#timePeriod
+    return (ms % T) / T
+  }
+
+  radians(ms) {
+    return 2 * Math.PI * this.rotations(ms)
+  }
+
+}
+
+class Fps {
+  N = 100
+  runningAvgFactor = 0.05
+
+  #timestamps = []
+  #runningFillDurationAverage = 0.0
+  #prevRefreshTimestamp = 0.0
+  #fps
+
+  constructor(
+    N = 100,
+    runningAvgFactor = 0.05,
+  ) {
+    this.N				= N
+    this.runningAvgFactor		= runningAvgFactor
+
+    this.#runningFillDurationAverage	= 0.0
+    this.#timestamps = []
+    this.#prevRefreshTimestamp = 0.0
+
+  }
+
+  getFps(msSinceStart) {
+    let fillDurationMs = 0.0
+
+    // Push timestamp to stack
+    this.#timestamps.push(msSinceStart)
+
+    // If stack full, refresh state
+    if (this.N <= this.#timestamps.length) {
+      fillDurationMs = msSinceStart - this.#prevRefreshTimestamp
+      this.#prevRefreshTimestamp = msSinceStart
+      this.#timestamps.splice(0)
+
+      this.#fps = 1000 / (fillDurationMs / this.N)
+    }
+
+    return Math.floor(this.#fps)
+  }
+}
+
 main()
+
 
 function main() {
   const stepperOneRaf = window.requestAnimationFrame(stepperOne)
 
   const stepperTwoRaf = window.requestAnimationFrame(stepperTwo)
+
+  const stepperThree = new StepperThree(
+    '#valueFromStepperThree', 15
+  )
+  const stepperThreeFn = (ts) => {
+    if (!stepperThree.isActive) stepperThree.start()
+    stepperThree.step(ts)
+    window.requestAnimationFrame(stepperThreeFn)
+  }
+  const stepperThreeRaf = window.requestAnimationFrame(stepperThreeFn)
 }
 
 function stepperOne(ts) {
