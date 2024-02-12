@@ -55,7 +55,8 @@ const lineWidth = 2.0
 const fillColorRgb = [0.95, 0.95, 0.75]
 const lineColorRgb = [0.05, 0.05, 0.75]
 const pointColorRgb = [0.45, 0.05, 0.05]
-const bgColor = {r:0.95,g:0.95,b:0.95,a:1}
+// const bgColor = {r:0.95,g:0.95,b:0.95,a:1}
+const bgColor = [0.95,0.95,0.95]
 
 // Other minor details
 // ----------------------------------------------------
@@ -163,7 +164,28 @@ function main(
   })
   console.log({triadsDrawable})
 
-  
+  setupControlVariables(
+    gl,
+    triadsDrawable,
+    linesDrawable,
+    pointsDrawable,
+    {
+      pointSize: {
+	sel: '#pointSize', val: pointSize,
+      },
+      bgColor: {
+	sel: '#bgColor', val: bgColor,
+      },
+      fillColorRgb: {
+	sel: '#fillColor', val: fillColorRgb,
+      },
+      lineColorRgb: {
+	sel: '#lineColor', val: lineColorRgb,
+      },
+      pointColorRgb: {
+	sel: '#pointColor', val: pointColorRgb,
+      },
+    })
 
   draw(
     gl, bgColor, pointSize,
@@ -173,9 +195,190 @@ function main(
   )
 }
 
-  // --------------------------------------------------
-  // Draw
-  // --------------------------------------------------
+// ----------------------------------------------------
+// Setup control variables from form
+// ----------------------------------------------------
+function getControlVariables({
+  pointSize: {
+    sel: pointSizeSel, val: pointSize,
+  },
+  bgColor: {
+    sel: bgColorSel, val: bgColor,
+  },
+  fillColorRgb: {
+    sel: fillColorRgbSel, val: fillColorRgb,
+  },
+  lineColorRgb: {
+    sel: lineColorRgbSel, val: lineColorRgb,
+  },
+  pointColorRgb: {
+    sel: pointColorRgbSel, val: pointColorRgb,
+  },
+} = {
+  // Sane Default
+  pointSize: {},
+  bgColor: {},
+  fillColorRgb: {},
+  lineColoRgb: {}
+}) {
+  pointSizeSel = pointSizeSel ?? '#pointSize'
+  bgColorSel = bgColorSel ?? '#bgColor'
+  fillColorRgbSel = fillColorRgbSel ?? '#fillColor'
+  lineColorRgbSel = lineColorRgbSel ?? '#lineColor'
+  pointColorRgbSel = pointColorRgbSel ?? '#pointColor'
+
+  const pointSizeDomEl
+	= document.querySelector(pointSizeSel)
+  , bgColorDomEl
+	= document.querySelector(bgColorSel)
+  , fillColorRgbDomEl
+	= document.querySelector(fillColorRgbSel)
+  , lineColorRgbDomEl
+	= document.querySelector(lineColorRgbSel)
+  , pointColorRgbDomEl
+	= document.querySelector(pointColorRgbSel)
+
+  pointSize	= parseFloat(pointSizeDomEl.value)
+  bgColor	= parseAsRgbFloat(bgColorDomEl.value)
+  fillColorRgb  = parseAsRgbFloat(fillColorRgbDomEl.value)
+  lineColorRgb  = parseAsRgbFloat(lineColorRgbDomEl.value)
+  pointColorRgb = parseAsRgbFloat(pointColorRgbDomEl.value)
+
+  return {
+    pointSize: {
+      sel: pointSizeSel, val: pointSize,
+    },
+    bgColor: {
+      sel: bgColorSel, val: bgColor,
+    },
+    fillColorRgb: {
+      sel: fillColorRgbSel, val: fillColorRgb,
+    },
+    lineColorRgb: {
+      sel: lineColorRgbSel, val: lineColorRgb,
+    },
+    pointColorRgb: {
+      sel: pointColorRgbSel, val: pointColorRgb,
+    },
+  }
+}
+
+function setControlVariables({
+  pointSize: {
+    sel: pointSizeSel, val: pointSize,
+  },
+  bgColor: {
+    sel: bgColorSel, val: bgColor,
+  },
+  fillColorRgb: {
+    sel: fillColorRgbSel, val: fillColorRgb,
+  },
+  lineColorRgb: {
+    sel: lineColorRgbSel, val: lineColorRgb,
+  },
+  pointColorRgb: {
+    sel: pointColorRgbSel, val: pointColorRgb,
+  },
+} = {
+  // Sane Default
+  pointSize: {},
+  bgColor: {},
+  fillColorRgb: {},
+  lineColoRgb: {}
+}) {
+  pointSizeSel = pointSizeSel ?? '#pointSize'
+  bgColorSel = bgColorSel ?? '#bgColor'
+  fillColorRgbSel = fillColorRgbSel ?? '#fillColor'
+  lineColorRgbSel = lineColorRgbSel ?? '#lineColor'
+  pointColorRgbSel = pointColorRgbSel ?? '#pointColor'
+
+  const pointSizeDomEl
+	= document.querySelector(pointSizeSel)
+  , bgColorDomEl
+	= document.querySelector(bgColorSel)
+  , fillColorRgbDomEl
+	= document.querySelector(fillColorRgbSel)
+  , lineColorRgbDomEl
+	= document.querySelector(lineColorRgbSel)
+  , pointColorRgbDomEl
+	= document.querySelector(pointColorRgbSel)
+
+  pointSizeDomEl.value = pointSize
+  bgColorDomEl.value = rgbFloatToHex(bgColor)
+  fillColorRgbDomEl.value = rgbFloatToHex(fillColorRgb)
+  lineColorRgbDomEl.value = rgbFloatToHex(lineColorRgb)
+  pointColorRgbDomEl.value = rgbFloatToHex(pointColorRgb)
+
+}
+
+function parseAsRgbFloat(rgb) {
+  const r = parseInt(rgb.slice(1,3), 16) / 255
+  const g = parseInt(rgb.slice(3,5), 16) / 255
+  const b = parseInt(rgb.slice(5,7), 16) / 255
+  return [r,g,b]
+}
+
+function rgbFloatToHex([r,g,b]) {
+  r = Math.min(255, Math.max(0, r))
+  r = Math.round(r * 255).toString(16)
+  r = ('00' + r).slice(-2)
+  g = Math.min(255, Math.max(0, g))
+  g = Math.round(g * 255).toString(16)
+  g = ('00' + g).slice(-2)
+  b = Math.min(255, Math.max(0, b))
+  b = Math.round(b * 255).toString(16)
+  b = ('00' + b).slice(-2)
+  return `#${r}${g}${b}`
+}
+
+function setupControlVariables(gl,
+			       triadsDrawable,
+			       linesDrawable,
+			       pointsDrawable,
+			       selectors) {
+  console.log({setupControlVariables: {selectors}})
+
+  setControlVariables(selectors)
+  
+  let {
+    pointSize		: { sel: pointSizeSel },
+    bgColor		: { sel: bgColorSel },
+    fillColorRgb	: { sel: fillColorRgbSel },
+    lineColorRgb	: { sel: lineColorRgbSel },
+    pointColorRgb	: { sel: pointColorRgbSel },
+  } = selectors;
+
+  
+  ([
+    document.querySelector(pointSizeSel)
+    , document.querySelector(bgColorSel)
+    , document.querySelector(fillColorRgbSel)
+    , document.querySelector(lineColorRgbSel)
+    , document.querySelector(pointColorRgbSel)
+  ]).forEach((domEl) => {
+    domEl.addEventListener('change', (e) => {
+      let {
+	pointSize	: { val: pointSize, },
+	bgColor		: { val: bgColor, },
+	fillColorRgb	: { val: fillColorRgb, },
+	lineColorRgb	: { val: lineColorRgb, },
+	pointColorRgb	: { val: pointColorRgb, },
+      } = getControlVariables(selectors)
+
+      draw(
+	gl, bgColor, pointSize,
+	triadsDrawable, fillColorRgb,
+	linesDrawable, lineColorRgb,
+	pointsDrawable, pointColorRgb,
+      )
+    })
+  })
+  
+}
+
+// ----------------------------------------------------
+// Draw
+// ----------------------------------------------------
 function draw (
   gl, bgColor, pointSize,
   triadsDrawable, fillColorRgb,
@@ -196,7 +399,7 @@ function draw (
     uFgColorRgb: pointColorRgb,
   })
 }
-  // --------------------------------------------------
+// ----------------------------------------------------
 
 
 // ----------------------------------------------------
@@ -204,7 +407,7 @@ function draw (
 // ----------------------------------------------------
 function clearCanvas(gl, bgColor) {
   // Set background white
-  const {r,g,b,a} = bgColor
+  const [r,g,b] = bgColor, a=1.0
   gl.clearColor(r,g,b,a)
 
   // Clear Buffers
