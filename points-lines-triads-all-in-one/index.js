@@ -261,8 +261,12 @@ function main(
 
   gl.bindBuffer(gl.ARRAY_BUFFER, null);
   // Done setting up the buffer -----------------------
+
+  // Set line width
+  // --------------------------------------------------
+  gl.lineWidth(lineWidth)
   
-  // Draw the points
+  // Draw the lines
   // ----------------------------------------------------
   // gl.drawArrays(gl.POINTS, 0, 3);
   gl.drawArrays(gl.LINES, 0, lineVerts.length/3);
