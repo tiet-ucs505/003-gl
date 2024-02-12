@@ -58,8 +58,6 @@ void main(void) {
 
 // Other minor details
 // ----------------------------------------------------
-// Canvas Selector
-const canvasSel = '#myCanvas'
 // For Debugging
 // Switch this off in production
 const isLinkingValidated = true
@@ -173,17 +171,12 @@ function main(
   // Draw the points
   // ----------------------------------------------------
   // gl.drawArrays(gl.POINTS, 0, 3);
-<<<<<<< HEAD
   // gl.drawArrays(gl.LINES, 0, 2);
   // gl.drawArrays(gl.LINE_STRIP, 0, 3);
   // gl.drawArrays(gl.LINE_LOOP, 0, 3);
   // gl.drawArrays(gl.TRIANGLES, 0, 3);
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 5);
   // gl.drawArrays(gl.TRIANGLE_FAN, 0, 5);
-
-=======
-  gl.drawArrays(gl.TRIANGLES, 0, 3);
->>>>>>> b0d81aa (Add highlightjs.)
 }
 
 // ----------------------------------------------------
