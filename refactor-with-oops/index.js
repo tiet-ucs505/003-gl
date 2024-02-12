@@ -173,6 +173,9 @@ function main(
       pointSize: {
 	sel: '#pointSize', val: pointSize,
       },
+      lineWidth: {
+	sel: '#lineWidth', val: lineWidth,
+      },
       bgColor: {
 	sel: '#bgColor', val: bgColor,
       },
@@ -188,7 +191,7 @@ function main(
     })
 
   draw(
-    gl, bgColor, pointSize,
+    gl, bgColor, pointSize, lineWidth,
     triadsDrawable, fillColorRgb,
     linesDrawable, lineColorRgb,
     pointsDrawable, pointColorRgb,
@@ -201,6 +204,9 @@ function main(
 function getControlVariables({
   pointSize: {
     sel: pointSizeSel, val: pointSize,
+  },
+  lineWidth: {
+    sel: lineWidthSel, val: lineWidth,
   },
   bgColor: {
     sel: bgColorSel, val: bgColor,
@@ -217,11 +223,14 @@ function getControlVariables({
 } = {
   // Sane Default
   pointSize: {},
+  lineWidth: {},
   bgColor: {},
   fillColorRgb: {},
-  lineColoRgb: {}
+  lineColoRgb: {},
+  pointColorRgb: {},
 }) {
   pointSizeSel = pointSizeSel ?? '#pointSize'
+  lineWidthSel = lineWidthSel ?? '#lineWidth'
   bgColorSel = bgColorSel ?? '#bgColor'
   fillColorRgbSel = fillColorRgbSel ?? '#fillColor'
   lineColorRgbSel = lineColorRgbSel ?? '#lineColor'
@@ -229,6 +238,8 @@ function getControlVariables({
 
   const pointSizeDomEl
 	= document.querySelector(pointSizeSel)
+  , lineWidthDomEl
+	= document.querySelector(lineWidthSel)
   , bgColorDomEl
 	= document.querySelector(bgColorSel)
   , fillColorRgbDomEl
@@ -239,6 +250,7 @@ function getControlVariables({
 	= document.querySelector(pointColorRgbSel)
 
   pointSize	= parseFloat(pointSizeDomEl.value)
+  lineWidth	= parseFloat(lineWidthDomEl.value)
   bgColor	= parseAsRgbFloat(bgColorDomEl.value)
   fillColorRgb  = parseAsRgbFloat(fillColorRgbDomEl.value)
   lineColorRgb  = parseAsRgbFloat(lineColorRgbDomEl.value)
@@ -247,6 +259,9 @@ function getControlVariables({
   return {
     pointSize: {
       sel: pointSizeSel, val: pointSize,
+    },
+    lineWidth: {
+      sel: lineWidthSel, val: lineWidth,
     },
     bgColor: {
       sel: bgColorSel, val: bgColor,
@@ -267,6 +282,9 @@ function setControlVariables({
   pointSize: {
     sel: pointSizeSel, val: pointSize,
   },
+  lineWidth: {
+    sel: lineWidthSel, val: lineWidth,
+  },
   bgColor: {
     sel: bgColorSel, val: bgColor,
   },
@@ -282,11 +300,14 @@ function setControlVariables({
 } = {
   // Sane Default
   pointSize: {},
+  lineWidth: {},
   bgColor: {},
   fillColorRgb: {},
-  lineColoRgb: {}
+  lineColoRgb: {},
+  pointColoRgb: {},
 }) {
   pointSizeSel = pointSizeSel ?? '#pointSize'
+  lineWidthSel = lineWidthSel ?? '#lineWidth'
   bgColorSel = bgColorSel ?? '#bgColor'
   fillColorRgbSel = fillColorRgbSel ?? '#fillColor'
   lineColorRgbSel = lineColorRgbSel ?? '#lineColor'
@@ -294,6 +315,8 @@ function setControlVariables({
 
   const pointSizeDomEl
 	= document.querySelector(pointSizeSel)
+  , lineWidthDomEl
+	= document.querySelector(lineWidthSel)
   , bgColorDomEl
 	= document.querySelector(bgColorSel)
   , fillColorRgbDomEl
@@ -304,6 +327,7 @@ function setControlVariables({
 	= document.querySelector(pointColorRgbSel)
 
   pointSizeDomEl.value = pointSize
+  lineWidthDomEl.value = lineWidth
   bgColorDomEl.value = rgbFloatToHex(bgColor)
   fillColorRgbDomEl.value = rgbFloatToHex(fillColorRgb)
   lineColorRgbDomEl.value = rgbFloatToHex(lineColorRgb)
@@ -342,6 +366,7 @@ function setupControlVariables(gl,
   
   let {
     pointSize		: { sel: pointSizeSel },
+    lineWidth		: { sel: lineWidthSel },
     bgColor		: { sel: bgColorSel },
     fillColorRgb	: { sel: fillColorRgbSel },
     lineColorRgb	: { sel: lineColorRgbSel },
@@ -351,6 +376,7 @@ function setupControlVariables(gl,
   
   ([
     document.querySelector(pointSizeSel)
+    , document.querySelector(lineWidthSel)
     , document.querySelector(bgColorSel)
     , document.querySelector(fillColorRgbSel)
     , document.querySelector(lineColorRgbSel)
@@ -359,6 +385,7 @@ function setupControlVariables(gl,
     domEl.addEventListener('change', (e) => {
       let {
 	pointSize	: { val: pointSize, },
+	lineWidth	: { val: lineWidth, },
 	bgColor		: { val: bgColor, },
 	fillColorRgb	: { val: fillColorRgb, },
 	lineColorRgb	: { val: lineColorRgb, },
@@ -366,7 +393,7 @@ function setupControlVariables(gl,
       } = getControlVariables(selectors)
 
       draw(
-	gl, bgColor, pointSize,
+	gl, bgColor, pointSize, lineWidth,
 	triadsDrawable, fillColorRgb,
 	linesDrawable, lineColorRgb,
 	pointsDrawable, pointColorRgb,
@@ -380,12 +407,13 @@ function setupControlVariables(gl,
 // Draw
 // ----------------------------------------------------
 function draw (
-  gl, bgColor, pointSize,
+  gl, bgColor, pointSize, lineWidth,
   triadsDrawable, fillColorRgb,
   linesDrawable, lineColorRgb,
   pointsDrawable, pointColorRgb,
 ) {
   clearCanvas(gl, bgColor)
+  gl.lineWidth(lineWidth)
   triadsDrawable.draw({
     uPointSize: pointSize,
     uFgColorRgb: fillColorRgb,

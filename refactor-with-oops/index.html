@@ -22,10 +22,16 @@
                   p-4 scroll">
         <div id="controls">
           <h3 class="text-3xl bold mt-4 mb-2">Controls</h3>
-          <p>
-            <label for="pointSize">Point Size: </label>
+          <p><label for="pointSize">Point Size: </label>
             <input id="pointSize"
                    name="pointSize"
+                   type="number"
+                   value=""
+                   class="border p-1"/>
+          </p>
+          <p><label for="lineWidth">Line Width: </label>
+            <input id="lineWidth"
+                   name="lineWidth"
                    type="number"
                    value=""
                    class="border p-1"/>
@@ -40,12 +46,12 @@
                    id="fillColor"
                    type="color"
                    value=""/></p>
-          <p><label for="lineColor">Background Color: </label>
+          <p><label for="lineColor">Line Color: </label>
             <input name="lineColor"
                    id="lineColor"
                    type="color"
                    value=""/></p>
-          <p><label for="pointColor">Background Color: </label>
+          <p><label for="pointColor">Point Color: </label>
             <input id="pointColor"
                    name="pointColor"
                    type="color"
